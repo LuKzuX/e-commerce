@@ -1,4 +1,5 @@
 const Product = require(`../models/productSchema`)
+const { createCustomError } = require("../errors/customError")
 
 const getProducts = async (req, res) => {
   const page = req.query.p || 1
@@ -18,16 +19,16 @@ const getProducts = async (req, res) => {
   res.json({ products, totalproducts })
 }
 
-const getProduct = async (req, res) => {
+const getProduct = async (req, res, next) => {
   try {
     const { id } = req.params
     const product = await Product.findOne({ _id: id })
     if (!product) {
-      return res.status(404).json({ error: `this product id does not exist` })
+      throw new Error() 
     }
-    res.json(product)
+    res.json({ product })
   } catch (error) {
-    return res.status(500).json({ error: `invalid id` })
+    next(error)
   }
 }
 
@@ -67,11 +68,12 @@ const updateProduct = async (req, res) => {
       { _id: id },
       { name, price, description, image, quantity }
     )
-    if (!updatedProduct) {
-      return res.status(404).json({ error: `this product id does not exist` })
+    if (!name) {
+      return res.status(401).send("sss")
     }
     res.json(updatedProduct)
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: `invalid id` })
   }
 }

@@ -1,26 +1,16 @@
 const User = require(`../models/userSchema`)
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt")
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
+  try {
     const { name, email, password } = req.body
-    if (!name) {
-      
-    }
-    try {
-      const salt = await bcrypt.genSalt(10)
-      const hash = await bcrypt.hash(password, salt)
-      const newUser = await User.create({
-        name,
-        email,
-        password: hash,
-        isAdmin: false,
-      })
-        res.json(newUser)
-    } catch (error) {
-        res.status(400).send(error)
-    }
+    const newUser = await User.create({ name, email, password, isAdmin: false })
+    res.json(newUser)
+  } catch (error) {
+    
+  }
 }
 
 module.exports = {
   login,
-} 
+}
