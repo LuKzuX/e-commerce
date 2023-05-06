@@ -15,7 +15,7 @@ const Home = () => {
   const { value, totalValue, error } = useList(`/api?p=${page}&${searchParams}`)
 
   return (
-    <div className='w-11/12 mx-auto'>
+    <div className='w-11/12 mx-auto mt-20'>
       {
         totalValue.length >= 9 && (
           <Carrousel />
@@ -45,7 +45,7 @@ const Home = () => {
                 })
               }}
             >
-              <option value='' selected></option>
+              <option value=''></option>
               <option value={"price"}>Price: Low to High</option>
               <option value={"-price"}>Price: High to Low</option>
               <option value={"name"}>Name: A to Z</option>

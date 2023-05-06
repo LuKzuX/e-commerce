@@ -1,6 +1,7 @@
 const Product = require(`../models/productSchema`)
 const { wrap } = require("../utils/wrap")
 const CustomError = require("../errors/customError")
+const conditionals = require("../utils/multipleConditionals")
 
 const getProducts = async (req, res) => {
   const page = req.query.p || 1
@@ -24,7 +25,7 @@ const getProduct = wrap(async (req, res) => {
   const { id } = req.params
   const product = await Product.findOne({ _id: id })
   if (!product) {
-    throw new CustomError("product not found", 401)
+    throw new CustomError("product not found", 404)
   }
   res.json(product)
 })
@@ -38,46 +39,30 @@ const createProduct = wrap(async (req, res) => {
     image,
     quantity,
   })
-
   res.json({ newProduct })
 })
 
-const updateProduct = async (req, res) => {
-  try {
-    const { id } = req.params
-    const {
-      name,
-      price,
-      description,
-      image = req.file.path,
-      quantity,
-    } = req.body
-    const updatedProduct = await Product.findByIdAndUpdate(
-      { _id: id },
-      { name, price, description, image, quantity }
-    )
-    if (!name) {
-      return res.status(401).send("sss")
-    }
-    res.json(updatedProduct)
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ error: `invalid id` })
+const updateProduct = wrap(async (req, res) => {
+  const { id } = req.params
+  const { name, price, description, image = req.file.path, quantity } = req.body
+  const updatedProduct = await Product.findByIdAndUpdate(
+    { _id: id },
+    { name, price, description, image: image || req.file.path, quantity },
+    { new: true, runValidators: true }
+  )
+  if (!conditionals(name, price, description, image, quantity)) {
+    throw new Error("Please type valid values in the fields", 401)
   }
-}
+  res.json(updatedProduct)
+})
 
-const deleteProduct = async (req, res) => {
-  try {
-    const { id } = req.params
-    const deletedProduct = await Product.findByIdAndDelete({ _id: id })
-    if (!deletedProduct) {
-      return res.status(404).json({ error: `this product id does not exist` })
-    }
-    res.json(deletedProduct)
-  } catch (error) {
-    return res.status(500).json({ error: `invalid id` })
+const deleteProduct = wrap(async (req, res) => {
+  const { id } = req.params
+  const deletedProduct = await Product.findByIdAndDelete({ _id: id })
+  if (!deletedProduct) {
+    throw new Error("no item to delete with this id", 404)
   }
-}
+})
 
 module.exports = {
   getProducts,

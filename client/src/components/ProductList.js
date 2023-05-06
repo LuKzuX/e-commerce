@@ -7,6 +7,8 @@ import { ProductContext } from "../context/productContext"
 const ProductList = () => {
   const navigate = useNavigate()
 
+  const admin = false
+
   const { value: data, setValue } = useContext(ProductContext)
   const handleDelete = async (id) => {
     try {

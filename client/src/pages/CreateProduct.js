@@ -1,7 +1,5 @@
 import { useState } from "react"
 import axios from "axios"
-import { HiOutlinePhotograph } from "react-icons/hi"
-import { FaSpinner } from "react-icons/fa"
 
 const CreateProduct = () => {
   const [name, setName] = useState("")
@@ -9,7 +7,7 @@ const CreateProduct = () => {
   const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
   const [quantity, setQuantity] = useState("")
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(undefined)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -22,15 +20,19 @@ const CreateProduct = () => {
     try {
       await axios.post("/api/new-product", formData)
     } catch (error) {
-      setError(true)
+      setError(error.response.data)
       setTimeout(() => {
-        setError(false)
+        setError(undefined)
       }, 1500)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-11/12 m-auto my-20"  encType='multipart/form-data'>
+    <form
+      onSubmit={handleSubmit}
+      className='w-11/12 m-auto my-20'
+      encType='multipart/form-data'
+    >
       <h3 className='text-lg font-medium mb-4'>Add new product</h3>
       <div className='mb-4'>
         <label htmlFor='name' className='block text-gray-700 font-medium mb-2'>
@@ -117,10 +119,9 @@ const CreateProduct = () => {
       >
         Create
       </button>
-
       {error && (
-        <div className='text-red-500 mt-4'>
-          Error creating the product. Please check all the inputs.
+        <div className='bg-red-500 text-white py-2 px-4 rounded-md w-32'>
+          <p>{error}</p>
         </div>
       )}
     </form>

@@ -3,8 +3,9 @@ const mongoose = require(`mongoose`)
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     minLength: 3,
-    required: [true, `please enter a valid name`],
+    required: [true, `please enter name with more than 3 characters`],
   },
   price: {
     type: Number,
@@ -12,10 +13,12 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    unique: true,
     required: true,
   },
   image: {
     type: String,
+    unique: true,
     required: true,
   },
   quantity: {

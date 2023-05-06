@@ -1,15 +1,18 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const UpdateProduct = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
   const [quantity, setQuantity] = useState("")
+  const [error, setError] = useState(undefined)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +24,7 @@ const UpdateProduct = () => {
         setImage(res.data.image)
         setQuantity(res.data.quantity)
       } catch (error) {
-        console.log(error)
+        setError("")
       }
     }
 
@@ -29,6 +32,7 @@ const UpdateProduct = () => {
   }, [id])
 
   const handleUpdate = async (e) => {
+    e.preventDefault()
     const formData = new FormData()
     formData.append("name", name)
     formData.append("price", price)
@@ -37,9 +41,13 @@ const UpdateProduct = () => {
     formData.append("quantity", quantity)
     try {
       await axios.patch("/api/update-product/" + id, formData)
-      console.log(image)
+      navigate("/")
     } catch (error) {
-      console.log(error)
+      console.log(error.response.data)
+      setError(error.response.data)
+      setTimeout(() => {
+        setError(undefined)
+      }, 1500)
     }
   }
 
@@ -60,6 +68,7 @@ const UpdateProduct = () => {
           placeholder='Product Name'
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
       </div>
       <div className='form-group'>
@@ -73,6 +82,7 @@ const UpdateProduct = () => {
           placeholder='Product Price'
           value={price}
           onChange={(e) => setPrice(e.target.value)}
+          required
         />
       </div>
       <div className='form-group'>
@@ -89,6 +99,7 @@ const UpdateProduct = () => {
           placeholder='Product Description'
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
         />
       </div>
       <div className='form-group'>
@@ -117,6 +128,7 @@ const UpdateProduct = () => {
           placeholder='Product Quantity'
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
+          required
         />
       </div>
       <button
@@ -125,6 +137,11 @@ const UpdateProduct = () => {
       >
         Update
       </button>
+      {error && (
+        <div className='bg-red-500 text-white py-2 px-4 rounded-md w-32'>
+          <p>{error}</p>
+        </div>
+      )}
     </form>
   )
 }
