@@ -1,8 +1,11 @@
+const CustomError = require('../errors/customError')
+
 const errorHandlerMiddleware = (err, req, res, next) => {
-  if (err.name == "CastError") {
-    return res.status(401).send("invalid id")
+  if (err instanceof CustomError) {
+    return res.status(err.statusCode).json(err.message)
   }
-  return res.status(500).send(err)
+  
+  return res.status(500).send("Something went wrong")
 }
 
 module.exports = errorHandlerMiddleware

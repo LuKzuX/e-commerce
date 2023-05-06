@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom"
 const ProductDetails = () => {
   const { id } = useParams()
   const [data, setData] = useState("")
+  const [error, setError] = useState("")
 
   const checkProductQuantity = (quantity) => {
     if (quantity < 100) {
@@ -19,7 +20,7 @@ const ProductDetails = () => {
         const res = await axios.get(`/api/product-details/` + id)
         setData(res.data)
       } catch (error) {
-        console.log(error)
+        setError(error.response.data)
       }
     }
     fetch()
@@ -27,6 +28,7 @@ const ProductDetails = () => {
 
   return (
     <div className='mt-20 flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-lg p-4'>
+        {<p>{error}</p>}
       <img
         src={data.image}
         className='w-full h-auto max-w-lg'

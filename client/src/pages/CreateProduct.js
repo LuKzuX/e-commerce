@@ -10,7 +10,6 @@ const CreateProduct = () => {
   const [image, setImage] = useState("")
   const [quantity, setQuantity] = useState("")
   const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,15 +20,12 @@ const CreateProduct = () => {
     formData.append("image", image)
     formData.append("quantity", quantity)
     try {
-      setLoading(true)
       await axios.post("/api/new-product", formData)
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
       setError(true)
       setTimeout(() => {
         setError(false)
-      }, 1000)
+      }, 1500)
     }
   }
 
@@ -124,7 +120,7 @@ const CreateProduct = () => {
 
       {error && (
         <div className='text-red-500 mt-4'>
-          Error creating the product. Please try again later.
+          Error creating the product. Please check all the inputs.
         </div>
       )}
     </form>
