@@ -34,7 +34,7 @@ const UpdateProduct = () => {
   const handleUpdate = async (e) => {
     e.preventDefault()
     const formData = new FormData()
-    formData.append("name", name)
+    formData.append("name", name.charAt(0).toUpperCase() + name.slice(1))
     formData.append("price", price)
     formData.append("description", description)
     formData.append("image", image)

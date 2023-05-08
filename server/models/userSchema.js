@@ -4,7 +4,7 @@ const { isEmail } = require("validator")
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minLength: 3,
+    minLength: [3, 'name must be equal or longher than 3 characters'],
     required: [true, "please enter a valid name"],
   },
   email: {

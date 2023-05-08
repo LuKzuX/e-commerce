@@ -7,7 +7,7 @@ const {
   updateProduct,
   deleteProduct,
 } = require(`../controllers/productControllers`)
-const { login } = require(`../controllers/userControllers`)
+const { signup } = require(`../controllers/userControllers`)
 const multer = require("multer")
 
 const storage = multer.diskStorage({
@@ -27,6 +27,6 @@ router.patch(`/update-product/:id`, upload.single("image"), updateProduct)
 router.delete(`/:id`, deleteProduct)
 
 //user controllers
-router.post(`/signup`, login)
+router.post(`/signup`, signup)
 
 module.exports = router

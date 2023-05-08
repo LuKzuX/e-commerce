@@ -51,7 +51,7 @@ const updateProduct = wrap(async (req, res) => {
     { new: true, runValidators: true }
   )
   if (!conditionals(name, price, description, image, quantity)) {
-    throw new Error("Please type valid values in the fields", 401)
+    throw new CustomError('Please fill all the fields', 401)
   }
   res.json(updatedProduct)
 })
