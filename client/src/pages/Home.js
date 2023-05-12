@@ -8,7 +8,6 @@ import Carrousel from "../components/Carrousel"
 
 const Home = () => {
   const navigate = useNavigate()
-
   const { value: products, setValue } = useContext(ProductContext)
   const [page, setPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams()

@@ -3,11 +3,12 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { useContext } from "react"
 import { ProductContext } from "../context/productContext"
+import AuthContext from "../context/AuthProvider"
 
 const ProductList = () => {
   const navigate = useNavigate()
 
-  const admin = false
+  const { auth, setAuth } = useContext(AuthContext)
 
   const { value: data, setValue } = useContext(ProductContext)
   const handleDelete = async (id) => {
@@ -35,22 +36,24 @@ const ProductList = () => {
               <p className='text-gray-500 mt-1'>${x.price}</p>
             </div>
           </Link>
-          <div className='admin-product-actions flex justify-center mt-2'>
-            <button
-              className='mx-2 px-3 py-2 rounded-md text-blue-500 border border-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-              onClick={() => navigate("/update-product/" + x._id)}
-            >
-              Update
-            </button>
-            <button
-              className='mx-2 px-3 py-2 rounded-md text-red-500 border border-red-500 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
-              onClick={() => {
-                handleDelete(x._id)
-              }}
-            >
-              Delete
-            </button>
-          </div>
+          { auth.roles == true &&
+            <div className='admin-product-actions flex justify-center mt-2'>
+              <button
+                className='mx-2 px-3 py-2 rounded-md text-blue-500 border border-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                onClick={() => navigate("/update-product/" + x._id)}
+              >
+                Update
+              </button>
+              <button
+                className='mx-2 px-3 py-2 rounded-md text-red-500 border border-red-500 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+                onClick={() => {
+                  handleDelete(x._id)
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          }
         </div>
       ))}
     </div>

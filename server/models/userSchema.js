@@ -1,10 +1,12 @@
 const mongoose = require("mongoose")
 const { isEmail } = require("validator")
+const bcrypt = require("bcrypt")
+const {wrap} = require('../utils/wrap')
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minLength: [3, 'name must be equal or longher than 3 characters'],
+    minLength: [3, "name must be equal or longher than 3 characters"],
     required: [true, "please enter a valid name"],
   },
   email: {
