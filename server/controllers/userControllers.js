@@ -1,25 +1,37 @@
 const User = require(`../models/userSchema`)
-const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" })
-}
-
 const { wrap } = require("../utils/wrap")
+const bcrypt = require("bcrypt")
+const CustomError = require("../errors/customError")
+
+const createToken = (obj) => {
+  return jwt.sign({ obj }, process.env.SECRET, { expiresIn: "3d" })
+}
 
 const signup = wrap(async (req, res) => {
   const { name, email, password } = req.body
-  const newUser = await User.create({ name, email, password, isAdmin: false })
-  res.send(newUser)
+  const newUser = await User.create({ name, email, password, userCart: [], isAdmin: false })
+  res.json({ newUser })
 })
 
 const signin = wrap(async (req, res) => {
   const { email, password } = req.body
-  const user = await User.login(email, password)
-  const token = createToken(user._id)
+  const user = await User.findOne({ email })
+  if (!email || !password) {
+    throw new CustomError("Please provide email and password", 400)
+  }
+  if (!user) {
+    throw new CustomError("incorrect email", 400)
+  }
+  const match = await bcrypt.compare(password, user.password)
+  if (!match) {
+    throw new CustomError("Incorrect password", 400)
+  }
+
+  const token = createToken(user)
   res.json({ user, token })
 })
+
 
 module.exports = {
   signup,

@@ -2,6 +2,7 @@ const Product = require(`../models/productSchema`)
 const { wrap } = require("../utils/wrap")
 const CustomError = require("../errors/customError")
 const conditionals = require("../utils/multipleConditionals")
+const jwt = require('jsonwebtoken')
 
 const getProducts = async (req, res) => {
   const page = req.query.p || 1
@@ -43,6 +44,7 @@ const createProduct = wrap(async (req, res) => {
 })
 
 const updateProduct = wrap(async (req, res) => {
+  console.log(req.user);
   const { id } = req.params
   const { name, price, description, image = req.file.path, quantity } = req.body
   const updatedProduct = await Product.findByIdAndUpdate(
@@ -62,6 +64,7 @@ const deleteProduct = wrap(async (req, res) => {
   if (!deletedProduct) {
     throw new Error("no item to delete with this id", 404)
   }
+  res.json('deleted')
 })
 
 module.exports = {

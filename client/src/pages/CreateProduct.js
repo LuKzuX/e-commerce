@@ -21,6 +21,7 @@ const CreateProduct = () => {
       await axios.post("/api/new-product", formData)
     } catch (error) {
       setError(error.response.data)
+      console.log(error);
       setTimeout(() => {
         setError(undefined)
       }, 1500)
@@ -48,6 +49,7 @@ const CreateProduct = () => {
           placeholder='Enter product name'
           required
         />
+        {error && error.name}
       </div>
       <div className='mb-4'>
         <label htmlFor='price' className='block text-gray-700 font-medium mb-2'>
@@ -64,6 +66,7 @@ const CreateProduct = () => {
           placeholder='Enter product price'
           required
         />
+        {error && error.price}
       </div>
       <div className='mb-4'>
         <label
@@ -81,6 +84,7 @@ const CreateProduct = () => {
           placeholder='Enter product description'
           required
         />
+        {error && error.description}
       </div>
       <div className='mb-4'>
         <label htmlFor='image' className='block text-gray-700 font-medium mb-2'>
@@ -94,6 +98,7 @@ const CreateProduct = () => {
           className='w-full py-2 px-3 rounded-md shadow-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
           required
         />
+        {error && error.image}
       </div>
       <div className='mb-4'>
         <label
@@ -112,6 +117,7 @@ const CreateProduct = () => {
           placeholder='Enter product quantity'
           required
         />
+        {error && error.quantity}
       </div>
       <button
         type='submit'
@@ -119,11 +125,6 @@ const CreateProduct = () => {
       >
         Create
       </button>
-      {error && (
-        <div className='bg-red-500 text-white py-2 px-4 rounded-md w-32'>
-          <p>{error}</p>
-        </div>
-      )}
     </form>
   )
 }

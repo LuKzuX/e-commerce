@@ -11,27 +11,24 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   }
 
   if (err instanceof mongoose.Error.ValidationError) {
-   let errors = {}
-   console.log(err.errors);
-   Object.keys(err.errors).forEach((key) => {
-    errors[key] = err.errors[key].message
-   });
-   return res.status(400).send(errors)
+    let errors = {}
+    console.log(err.errors)
+    Object.keys(err.errors).forEach((key) => {
+      errors[key] = err.errors[key].message
+    })
+    return res.status(400).send(errors)
   }
 
   if (err.code == 11000) {
-    console.log(err)
+    const prop = Object.keys(err.keyValue)[0]
     return res
       .status(401)
-      .send(
-        `The ${Object.keys(err.keyValue)[0]} '${Object.values(
-          err.keyValue
-        )}' already exists`
-      )
+      .send({
+        [prop]: `The ${prop} '${Object.values(err.keyValue)}' already exists`,
+      })
   }
-  console.log(err);
+  console.log(err)
   return res.status(500).send(err.message)
-
 }
 
 module.exports = errorHandlerMiddleware

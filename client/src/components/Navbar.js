@@ -1,20 +1,15 @@
-import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { ProductContext } from "../context/productContext"
 import { HiMenuAlt1 } from "react-icons/hi"
 import { AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai"
-import { useRef } from "react"
+import { useLogout } from "../functions/useLogout"
+import { useAuthContext } from "../functions/useAuthContext"
 
 function Navbar({ open, setMenuOpen }) {
-  const btnRef = useRef()
-  useEffect(() => {
-    const handler = (e) => {
-      if (!btnRef.current.contains(e.target)) {
-        setMenuOpen(false)
-      }
-    }
-    document.addEventListener("mousedown", handler)
-  })
+  const { logout } = useLogout()
+  const { user } = useAuthContext()
+  const handleLogout = () => {
+    logout()
+  }
 
   return (
     <header className=' fixed w-full top-0 z-10'>
@@ -23,15 +18,17 @@ function Navbar({ open, setMenuOpen }) {
           <div className=''>
             <Link to={`/`}>
               <h1 className='text-2xl'>E-Commerce</h1>
+              {user && <span>{user.data.user.email}</span>}
             </Link>
           </div>
           <div className='hidden w-1/4 ml-auto lg:block'>
             <Link className='font-bold'>Account</Link>
-            <Link className='ml-20 font-bold'>Cart</Link>
+            <Link to={`/cart`} className='ml-20 font-bold'>
+              Cart
+            </Link>
           </div>
           <div className='w-10'>
             <h1
-              ref={btnRef}
               onClick={() => {
                 setMenuOpen(!open)
               }}
@@ -65,12 +62,38 @@ function Navbar({ open, setMenuOpen }) {
           {" "}
           <AiOutlineShoppingCart />{" "}
         </Link>
-        <Link className='mt-3.5 mb-3.5 p-3 px-5 bg-sky-500 rounded text-white'>
-          Login
-        </Link>
-        <Link className='mt-3.5 bg-green-500 p-3 rounded text-white'>
-          Sign up
-        </Link>
+        {!user && (
+          <div>
+            <Link
+              to={"/signin"}
+              onClick={() => {
+                setMenuOpen(!open)
+              }}
+              className='mt-3.5 mb-3.5 p-3 px-5 bg-sky-500 rounded text-white'
+            >
+              Login
+            </Link>
+            <Link
+              to={"/signup"}
+              onClick={() => {
+                setMenuOpen(!open)
+              }}
+              className='mt-3.5 bg-green-500 p-3 rounded text-white'
+            >
+              Sign up
+            </Link>
+          </div>
+        )}
+        {user && (
+          <div>
+            <Link
+              onClick={handleLogout}
+              className='inline-block px-4 py-2 text-white bg-red-500 border border-transparent rounded-md hover:bg-red-600 transition duration-200'
+            >
+              Logout
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   )

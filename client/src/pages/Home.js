@@ -1,16 +1,19 @@
 import ProductList from "../components/ProductList"
+import axios from "axios"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import useList from "../functions/fetchHook"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ProductContext } from "../context/productContext"
 import fill from "../functions/pagination"
 import Carrousel from "../components/Carrousel"
+import { useAuthContext } from "../functions/useAuthContext"
 
 const Home = () => {
   const navigate = useNavigate()
   const { value: products, setValue } = useContext(ProductContext)
   const [page, setPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams()
+  const { user } = useAuthContext()
   const { value, totalValue, error } = useList(`/api?p=${page}&${searchParams}`)
 
   return (
@@ -122,16 +125,18 @@ const Home = () => {
               )}
             </div>
           </div>
-          <div className='flex justify-center'>
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center'
-              onClick={() => {
-                navigate("/new-product")
-              }}
-            >
-              New product
-            </button>
-          </div>
+          {user && user.data.user.isAdmin && (
+            <div className='flex justify-center'>
+              <button
+                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center'
+                onClick={() => {
+                  navigate("/new-product")
+                }}
+              >
+                New product
+              </button>
+            </div>
+          )}
         </div>
       }
     </div>

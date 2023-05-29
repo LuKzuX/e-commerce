@@ -2,8 +2,10 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import { useAuthContext } from "../functions/useAuthContext"
 
 const UpdateProduct = () => {
+  const { user } = useAuthContext()
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -40,13 +42,21 @@ const UpdateProduct = () => {
     formData.append("image", image)
     formData.append("quantity", quantity)
     try {
-      await axios.patch("/api/update-product/" + id, formData)
+      await axios.patch("/api/update-product/" + id, formData, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      if (!user) {
+        setError("only admins can update products")
+      }
       navigate("/")
     } catch (error) {
       console.log(error.response.data)
       setError(error.response.data)
       setTimeout(() => {
         setError(undefined)
+        console.log(error.response)
       }, 1500)
     }
   }
@@ -70,6 +80,7 @@ const UpdateProduct = () => {
           onChange={(e) => setName(e.target.value)}
           required
         />
+        {error && error.name}
       </div>
       <div className='form-group'>
         <label className='block text-gray-700 font-bold mb-2' htmlFor='price'>
@@ -84,6 +95,7 @@ const UpdateProduct = () => {
           onChange={(e) => setPrice(e.target.value)}
           required
         />
+        {error && error.price}
       </div>
       <div className='form-group'>
         <label
@@ -101,6 +113,7 @@ const UpdateProduct = () => {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
+        {error && error.description}
       </div>
       <div className='form-group'>
         <label className='block text-gray-700 font-bold mb-2' htmlFor='image'>
@@ -113,6 +126,7 @@ const UpdateProduct = () => {
           name='image'
           onChange={(e) => setImage(e.target.files[0])}
         />
+        {error && error.image}
       </div>
       <div className='form-group'>
         <label
@@ -130,6 +144,7 @@ const UpdateProduct = () => {
           onChange={(e) => setQuantity(e.target.value)}
           required
         />
+        {error && error.quantity}
       </div>
       <button
         className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
@@ -137,11 +152,7 @@ const UpdateProduct = () => {
       >
         Update
       </button>
-      {error && (
-        <div className='bg-red-500 text-white py-2 px-4 rounded-md w-32'>
-          <p>{error}</p>
-        </div>
-      )}
+      {error && <div className='alert text-red-500'>{error}</div>}
     </form>
   )
 }

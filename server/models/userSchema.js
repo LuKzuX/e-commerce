@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const { isEmail } = require("validator")
 const bcrypt = require("bcrypt")
 const {wrap} = require('../utils/wrap')
+const CustomError = require("../errors/customError")
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,7 +22,16 @@ const userSchema = new mongoose.Schema({
     required: [true, "please enter a password"],
     minlength: [6, "minimum password length is 6 characters"],
   },
+  userCart: {
+    type: Array
+  },
   isAdmin: { type: Boolean, required: true },
+})
+
+userSchema.pre('save', async  function (next) {
+  const salt = await bcrypt.genSalt()
+  this.password = await bcrypt.hash(this.password, salt)
+  next()
 })
 
 const User = mongoose.model("User", userSchema)

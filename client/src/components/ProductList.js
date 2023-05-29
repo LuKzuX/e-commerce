@@ -1,23 +1,27 @@
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { ProductContext } from "../context/productContext"
-import AuthContext from "../context/AuthProvider"
+import { useAuthContext } from "../functions/useAuthContext"
 
 const ProductList = () => {
   const navigate = useNavigate()
-
-  const { auth, setAuth } = useContext(AuthContext)
-
+  const [error, setError] = useState("")
+  const { user } = useAuthContext()
   const { value: data, setValue } = useContext(ProductContext)
+
   const handleDelete = async (id) => {
     try {
-      await axios.delete("/api/" + id)
+      await axios.delete("/api/" + id, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
       const newArr = data.filter((item) => item._id !== id)
       setValue(newArr)
     } catch (error) {
-      console.log(error)
+      console.log(error.response.data)
     }
   }
 
@@ -36,24 +40,29 @@ const ProductList = () => {
               <p className='text-gray-500 mt-1'>${x.price}</p>
             </div>
           </Link>
-          { auth.roles == true &&
+          <button className='bg-transparent border border-yellow-400 text-yellow-600 font-bold py-2 px-4 rounded-lg hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2'>
+            Buy
+          </button>
+          {user && user.data.user.isAdmin && (
             <div className='admin-product-actions flex justify-center mt-2'>
-              <button
-                className='mx-2 px-3 py-2 rounded-md text-blue-500 border border-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                onClick={() => navigate("/update-product/" + x._id)}
-              >
-                Update
-              </button>
-              <button
-                className='mx-2 px-3 py-2 rounded-md text-red-500 border border-red-500 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
-                onClick={() => {
-                  handleDelete(x._id)
-                }}
-              >
-                Delete
-              </button>
+              <div>
+                <button
+                  className='mx-2 px-3 py-2 rounded-md text-blue-500 border border-blue-500 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                  onClick={() => navigate("/update-product/" + x._id)}
+                >
+                  Update
+                </button>
+                <button
+                  className='mx-2 px-3 py-2 rounded-md text-red-500 border border-red-500 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+                  onClick={() => {
+                    handleDelete(x._id)
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          }
+          )}
         </div>
       ))}
     </div>

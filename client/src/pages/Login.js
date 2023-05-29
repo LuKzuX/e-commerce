@@ -1,30 +1,22 @@
-import { useContext, useState } from "react"
-import AuthContext from "../context/AuthProvider"
-import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { useLogin } from "../functions/useLogin"
 
 const Login = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const { login, error, isLoading } = useLogin()
 
-  const navigate = useNavigate()
-  const {setAuth} = useContext(AuthContext)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      const res = await axios.post('/api/signin', {email, password})
-      const accessToken = res?.data?.accessToken
-      const roles = res?.data.user.isAdmin
-      setAuth({email, password, roles, accessToken})
-      navigate('/')
-    } catch (error) {
-      console.log(error);
-    }
+    await login(email, password)
   }
+
   return (
-      <form onSubmit={handleLogin} className="mt-20">
-        <label>email:</label>
+    <form onSubmit={handleSubmit} className='mt-20'>
+      <div className='mb-4'>
+        <label htmlFor='email' className='block text-lg font-medium'>
+          Email:
+        </label>
         <input
           type='text'
           name='email'
@@ -32,18 +24,27 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           id='email'
           required
+          className='input-field border-2'
         />
-        <label>password:</label>
+      </div>
+      <div className='mb-4'>
+        <label htmlFor='password' className='block text-lg font-medium'>
+          Password:
+        </label>
         <input
-          type='text'
+          type='password'
           name='password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           id='password'
           required
+          className='input-field border-2'
         />
-        <button>Submit</button>
-      </form>
+      </div>
+      <button className='submit-btn bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-blue-600'>
+        Submit
+      </button>
+    </form>
   )
 }
 
