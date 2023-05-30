@@ -1,6 +1,9 @@
 const express = require("express")
 const router = express.Router()
-const {authMiddleware, verifyAdmin} = require("../middlewares/userAuthMiddleware")
+const {
+  authMiddleware,
+  verifyAdmin,
+} = require("../middlewares/userAuthMiddleware")
 const {
   getProducts,
   getProduct,
@@ -8,7 +11,7 @@ const {
   updateProduct,
   deleteProduct,
 } = require(`../controllers/productControllers`)
-const { signup, signin, verifyUser } = require(`../controllers/userControllers`)
+const { signup, signin } = require(`../controllers/userControllers`)
 const { getCartProducts } = require(`../controllers/cartControllers`)
 const multer = require("multer")
 
@@ -25,8 +28,20 @@ const upload = multer({ storage: storage })
 //product routes
 router.get(`/`, getProducts)
 router.get(`/product-details/:id`, getProduct)
-router.post(`/new-product`, authMiddleware, upload.single("image"), createProduct)
-router.patch(`/update-product/:id`, upload.single("image"), authMiddleware, verifyAdmin, updateProduct)
+router.post(
+  `/new-product`,
+  upload.single("image"),
+  authMiddleware,
+  verifyAdmin,
+  createProduct
+)
+router.patch(
+  `/update-product/:id`,
+  upload.single("image"),
+  authMiddleware,
+  verifyAdmin,
+  updateProduct
+)
 router.delete(`/:id`, authMiddleware, verifyAdmin, deleteProduct)
 
 //cart routes

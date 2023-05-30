@@ -1,5 +1,6 @@
 import { useState } from "react"
 import axios from "axios"
+import { useAuthContext } from "../functions/useAuthContext"
 
 const CreateProduct = () => {
   const [name, setName] = useState("")
@@ -8,6 +9,7 @@ const CreateProduct = () => {
   const [image, setImage] = useState("")
   const [quantity, setQuantity] = useState("")
   const [error, setError] = useState(undefined)
+  const { user } = useAuthContext()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,10 +20,13 @@ const CreateProduct = () => {
     formData.append("image", image)
     formData.append("quantity", quantity)
     try {
-      await axios.post("/api/new-product", formData)
+      await axios.post("/api/new-product", formData,{
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
     } catch (error) {
       setError(error.response.data)
-      console.log(error);
       setTimeout(() => {
         setError(undefined)
       }, 1500)

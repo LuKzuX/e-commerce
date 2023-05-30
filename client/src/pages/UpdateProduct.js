@@ -16,6 +16,7 @@ const UpdateProduct = () => {
   const [quantity, setQuantity] = useState("")
   const [error, setError] = useState(undefined)
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,7 +27,8 @@ const UpdateProduct = () => {
         setImage(res.data.image)
         setQuantity(res.data.quantity)
       } catch (error) {
-        setError("")
+        console.log(error);
+        setError(error.response.data)
       }
     }
 
@@ -41,10 +43,11 @@ const UpdateProduct = () => {
     formData.append("description", description)
     formData.append("image", image)
     formData.append("quantity", quantity)
+
     try {
       await axios.patch("/api/update-product/" + id, formData, {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.data.token}`,
         },
       })
       if (!user) {
@@ -56,7 +59,6 @@ const UpdateProduct = () => {
       setError(error.response.data)
       setTimeout(() => {
         setError(undefined)
-        console.log(error.response)
       }, 1500)
     }
   }
@@ -80,7 +82,7 @@ const UpdateProduct = () => {
           onChange={(e) => setName(e.target.value)}
           required
         />
-        {error && error.name}
+        {error && <p>{error.name}</p>}
       </div>
       <div className='form-group'>
         <label className='block text-gray-700 font-bold mb-2' htmlFor='price'>
