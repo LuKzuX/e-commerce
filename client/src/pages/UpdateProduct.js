@@ -16,7 +16,6 @@ const UpdateProduct = () => {
   const [quantity, setQuantity] = useState("")
   const [error, setError] = useState(undefined)
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,7 +26,7 @@ const UpdateProduct = () => {
         setImage(res.data.image)
         setQuantity(res.data.quantity)
       } catch (error) {
-        console.log(error);
+        console.log(error)
         setError(error.response.data)
       }
     }
@@ -55,7 +54,6 @@ const UpdateProduct = () => {
       }
       navigate("/")
     } catch (error) {
-      console.log(error.response.data)
       setError(error.response.data)
       setTimeout(() => {
         setError(undefined)
@@ -82,7 +80,7 @@ const UpdateProduct = () => {
           onChange={(e) => setName(e.target.value)}
           required
         />
-        {error && <p>{error.name}</p>}
+        {error && error.name}
       </div>
       <div className='form-group'>
         <label className='block text-gray-700 font-bold mb-2' htmlFor='price'>
@@ -154,7 +152,6 @@ const UpdateProduct = () => {
       >
         Update
       </button>
-      {error && <div className='alert text-red-500'>{error}</div>}
     </form>
   )
 }
