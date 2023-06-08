@@ -22,9 +22,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "please enter a password"],
     minlength: [6, "minimum password length is 6 characters"],
   },
-  userCart: {
-    type: Array
-  },
+  userCart: [{
+    product: {type: mongoose.Schema.Types.ObjectId, ref: 'Product'}, 
+    quantity: {type: Number, default: 1}
+  }],
   isAdmin: { type: Boolean, required: true },
 })
 

@@ -1,7 +1,7 @@
 import useCarrousel from "../functions/useCarrousel"
 import { Link } from "react-router-dom"
 import { useRef } from "react"
-import { AiOutlineArrowRight,  AiOutlineArrowLeft} from "react-icons/ai"
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai"
 
 const Carrousel = () => {
   const { carrousel } = useCarrousel()
@@ -39,18 +39,18 @@ const Carrousel = () => {
             </div>
           ))}
       </div>
-      <div className="flex justify-center mb-10">
+      <div className='flex justify-center mb-10'>
         <button
           className='p-3 hidden mr-3 text-white bg-gray-500 lg:block bg-color-red'
           onClick={() => scroll(-600)}
         >
-          <AiOutlineArrowLeft/>
+          <AiOutlineArrowLeft />
         </button>
         <button
           className='p-3 hidden text-white bg-gray-500 lg:block'
           onClick={() => scroll(600)}
         >
-         <AiOutlineArrowRight/>
+          <AiOutlineArrowRight />
         </button>
       </div>
     </div>

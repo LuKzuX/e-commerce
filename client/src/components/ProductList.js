@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { ProductContext } from "../context/productContext"
 import { useAuthContext } from "../functions/useAuthContext"
 
 const ProductList = () => {
   const navigate = useNavigate()
-  const [error, setError] = useState("")
   const { user } = useAuthContext()
   const { value: data, setValue } = useContext(ProductContext)
 
@@ -15,7 +14,7 @@ const ProductList = () => {
     try {
       await axios.delete("/api/" + id, {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.data.token}`,
         },
       })
       const newArr = data.filter((item) => item._id !== id)
@@ -40,7 +39,10 @@ const ProductList = () => {
               <p className='text-gray-500 mt-1'>${x.price}</p>
             </div>
           </Link>
-          <button className='bg-transparent border border-yellow-400 text-yellow-600 font-bold py-2 px-4 rounded-lg hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2'>
+          <button
+            onClick={() => {}}
+            className='bg-transparent border border-yellow-400 text-yellow-600 font-bold py-2 px-4 rounded-lg hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2'
+          >
             Buy
           </button>
           {user && user.data.user.isAdmin && (

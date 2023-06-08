@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt")
 const CustomError = require("../errors/customError")
 
 const createToken = (obj) => {
-  return jwt.sign({ obj }, process.env.SECRET, { expiresIn: "3d" })
+  return jwt.sign({ obj }, process.env.SECRET)
 }
 
 const signup = wrap(async (req, res) => {
@@ -23,11 +23,6 @@ const signin = wrap(async (req, res) => {
   if (!user) {
     throw new CustomError("incorrect email", 400)
   }
-  const match = await bcrypt.compare(password, user.password)
-  if (!match) {
-    throw new CustomError("Incorrect password", 400)
-  }
-
   const token = createToken(user)
   res.json({ user, token })
 })
