@@ -16,6 +16,7 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import { useAuthContext } from "./functions/useAuthContext"
 import Cart from "./pages/Cart"
+import { CartProvider } from "./context/cartContext"
 
 function App() {
   const [value, setValue] = useState(undefined)
@@ -27,6 +28,7 @@ function App() {
       <Router>
         <Navbar open={open} setMenuOpen={setMenuOpen} />
         <ProductContext.Provider value={{ value, setValue, open, setMenuOpen }}>
+        <CartProvider>
           <div
             className={`${
               open
@@ -41,11 +43,11 @@ function App() {
               <Route
                 path='/update-product/:id'
                 element={
-                   user && user.data.user.isAdmin ?  
+                  user && user.data.user.isAdmin ? (
                     <UpdateProduct />
-                   : 
+                  ) : (
                     <Navigate to={`/`} />
-                  
+                  )
                 }
               />
               <Route path='/cart' element={<Cart />} />
@@ -53,6 +55,7 @@ function App() {
               <Route path='/signup' element={<Signup />} />
             </Routes>
           </div>
+          </CartProvider>
         </ProductContext.Provider>
       </Router>
     </div>

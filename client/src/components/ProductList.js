@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ProductContext } from "../context/productContext"
 import { useAuthContext } from "../functions/useAuthContext"
 
@@ -9,6 +9,7 @@ const ProductList = () => {
   const navigate = useNavigate()
   const { user } = useAuthContext()
   const { value: data, setValue } = useContext(ProductContext)
+  const [cartItems, setCartItems] = useState([])
 
   const handleDelete = async (id) => {
     try {
@@ -23,6 +24,44 @@ const ProductList = () => {
       console.log(error.response.data)
     }
   }
+
+  const handleAdd = async (id) => {
+    try {
+      await axios.post(`/api/` + id, "", {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    const boughtProducts = async () => {
+      const both = []
+      try {
+        const userCart = await axios.get(`/api/cart`, {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        })
+        for (let i = 0; i < userCart.data.length; i++) {
+          for (let j = 0; j < data.length; j++) {
+            if (
+              userCart.data[i].product.toString() === data[j]._id.toString()
+            ) {
+              both.push(userCart.data[i].product)
+            }
+          }
+        }
+        setCartItems(both)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    boughtProducts()
+  }, [data])
 
   return (
     <div className='product-list grid grid-cols-1 gap-5 w-11/12 m-auto xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
@@ -40,10 +79,11 @@ const ProductList = () => {
             </div>
           </Link>
           <button
-            onClick={() => {}}
+            onClick={() => handleAdd(x._id)}
             className='bg-transparent border border-yellow-400 text-yellow-600 font-bold py-2 px-4 rounded-lg hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2'
+            disabled={cartItems.includes(x._id)}
           >
-            Buy
+            {cartItems.includes(x._id) ? "ADDED TO CART" : "ADD TO CART"}
           </button>
           {user && user.data.user.isAdmin && (
             <div className='admin-product-actions flex justify-center mt-2'>

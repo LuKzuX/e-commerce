@@ -8,7 +8,7 @@ function Navbar({ open, setMenuOpen }) {
   const { logout } = useLogout()
   const { user } = useAuthContext()
   const handleLogout = () => {
-    logout()
+    logout()  
   }
 
   return (
@@ -88,6 +88,7 @@ function Navbar({ open, setMenuOpen }) {
           <div>
             <Link
               onClick={handleLogout}
+
               className='inline-block px-4 py-2 text-white bg-red-500 border border-transparent rounded-md hover:bg-red-600 transition duration-200'
             >
               Logout

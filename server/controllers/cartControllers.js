@@ -25,7 +25,16 @@ const addToCart = wrap(async (req, res) => {
 const getCartProducts = wrap(async (req, res) => {
   const { _id } = req.user.obj
   const user = await User.findById(_id)
+  const products = await Product.find(user.userCart.product)
   res.json(user.userCart)
+})
+
+const getCartProductsDetailed = wrap(async(req, res) => {
+  const { _id } = req.user.obj
+  const user = await User.findById(_id)
+  const wholeProduct = user.userCart.product
+  const product = Product.find(wholeProduct)
+  res.json(product)
 })
 
 const deleteCartProducts = wrap(async (req, res) => {

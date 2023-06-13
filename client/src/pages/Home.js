@@ -1,5 +1,4 @@
 import ProductList from "../components/ProductList"
-import axios from "axios"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import useList from "../functions/fetchHook"
 import { useContext, useEffect, useState } from "react"
