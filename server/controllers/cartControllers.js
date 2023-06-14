@@ -29,14 +29,6 @@ const getCartProducts = wrap(async (req, res) => {
   res.json(user.userCart)
 })
 
-const getCartProductsDetailed = wrap(async(req, res) => {
-  const { _id } = req.user.obj
-  const user = await User.findById(_id)
-  const wholeProduct = user.userCart.product
-  const product = Product.find(wholeProduct)
-  res.json(product)
-})
-
 const deleteCartProducts = wrap(async (req, res) => {
   const productId = req.params.id
   const { _id } = req.user.obj
@@ -55,5 +47,6 @@ const deleteCartProducts = wrap(async (req, res) => {
   await user.save()
   res.json(user.userCart)
 })
+
 
 module.exports = { getCartProducts, addToCart, deleteCartProducts }

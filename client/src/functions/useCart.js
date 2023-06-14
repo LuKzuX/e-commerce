@@ -15,7 +15,6 @@ export const useCartProducts = async () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         })
-        console.log(response);
         setCartItems(response.data)
       } catch (error) {
         console.log(error)

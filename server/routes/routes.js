@@ -12,7 +12,7 @@ const {
   deleteProduct,
 } = require(`../controllers/productControllers`)
 const { signup, signin } = require(`../controllers/userControllers`)
-const { getCartProducts, addToCart, deleteCartProducts, getCartProductsDetailed } = require(`../controllers/cartControllers`)
+const { getCartProducts, addToCart, deleteCartProducts} = require(`../controllers/cartControllers`)
 const multer = require("multer")
 
 const storage = multer.diskStorage({
