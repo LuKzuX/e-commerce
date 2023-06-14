@@ -19,7 +19,7 @@ const addToCart = wrap(async (req, res) => {
   }
 
   await user.save()
-  res.json(user)
+  res.json(product)
 })
 
 const getCartProducts = wrap(async (req, res) => {
