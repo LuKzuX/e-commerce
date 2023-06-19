@@ -12,20 +12,22 @@ const addToCart = wrap(async (req, res) => {
   const existingProduct = user.userCart.find(
     (item) => item.product.toString() == productId
   )
+
   if (existingProduct) {
-    existingProduct.quantity += 1
+    if (req.body.quantity) {
+      existingProduct.quantity = req.body.quantity
+    }
   } else {
     user.userCart.push({ product })
   }
 
   await user.save()
-  res.json(product)
+  res.json(user.userCart)
 })
 
 const getCartProducts = wrap(async (req, res) => {
   const { _id } = req.user.obj
   const user = await User.findById(_id)
-  const products = await Product.find(user.userCart.product)
   res.json(user.userCart)
 })
 
@@ -33,20 +35,12 @@ const deleteCartProducts = wrap(async (req, res) => {
   const productId = req.params.id
   const { _id } = req.user.obj
   const user = await User.findById(_id)
-  const existingProduct = user.userCart.find(
-    (item) => item.product.toString() == productId
-  )
-  if (existingProduct.quantity > 1) {
-    existingProduct.quantity -= 1
-  } else {
-    const deletedProduct = user.userCart.filter(
-      (item) => item.product.toString() !== productId
-    )
-    user.userCart = deletedProduct
-  }
+  const deletedProducts = user.userCart.filter((item) => {
+    return item.product.toString() !== productId
+  })
+  user.userCart = deletedProducts
   await user.save()
   res.json(user.userCart)
 })
-
 
 module.exports = { getCartProducts, addToCart, deleteCartProducts }

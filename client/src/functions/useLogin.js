@@ -6,7 +6,6 @@ import axios from "axios"
 export const useLogin = () => {
   const [error, setError] = useState(null)
   const { dispatch } = useAuthContext()
-  const {user} = useAuthContext()
   const navigate = useNavigate()
 
   const login = async (email, password) => {

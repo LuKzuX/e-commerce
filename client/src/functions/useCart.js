@@ -3,25 +3,25 @@ import { useAuthContext } from "../functions/useAuthContext"
 import { useEffect, useState } from "react"
 import { useCartContext } from "../context/cartContext"
 
-export const useCartProducts = async () => {
+export const useCartProducts = () => {
   const { user } = useAuthContext()
-  const { cartItems, setCartItems } = useCartContext()
+  const [ cartItems, setCartItems ] = useState([])
 
-  useEffect(() => {
-    const getCartItems = async () => {
-      try {
-        const response = await axios(`/api/cart`, {
-          headers: {
-            Authorization: `Bearer ${user.data.token}`,
-          },
-        })
-        setCartItems(response.data)
-      } catch (error) {
-        console.log(error)
-      }
+  const getCartItems = async () => {
+    try {
+      const res = await axios(`/api/cart`, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
+      setCartItems(res.data)
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
     getCartItems()
   }, [user])
-
-  return { cartItems }
+  return { cartItems, setCartItems, getCartItems }
 }
+

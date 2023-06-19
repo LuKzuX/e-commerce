@@ -46,6 +46,7 @@ const ProductList = () => {
             Authorization: `Bearer ${user.data.token}`,
           },
         })
+
         for (let i = 0; i < userCart.data.length; i++) {
           for (let j = 0; j < data.length; j++) {
             if (
