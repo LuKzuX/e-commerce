@@ -9,7 +9,7 @@ export const useCartProducts = () => {
 
   const getCartItems = async () => {
     try {
-      const res = await axios(`/api/cart`, {
+      const res = await axios.get(`/api/cart`, {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },

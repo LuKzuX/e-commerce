@@ -50,9 +50,9 @@ const ProductList = () => {
         for (let i = 0; i < userCart.data.length; i++) {
           for (let j = 0; j < data.length; j++) {
             if (
-              userCart.data[i].product.toString() === data[j]._id.toString()
+              userCart.data[i].product._id.toString() === data[j]._id.toString()
             ) {
-              both.push(userCart.data[i].product)
+              both.push(userCart.data[i].product._id)
             }
           }
         }

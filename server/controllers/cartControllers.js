@@ -2,7 +2,6 @@ const Product = require(`../models/productSchema`)
 const User = require(`../models/userSchema`)
 const { wrap } = require("../utils/wrap")
 const CustomError = require("../errors/customError")
-const jwt = require("jsonwebtoken")
 
 const addToCart = wrap(async (req, res) => {
   const productId = req.params.id
@@ -10,7 +9,7 @@ const addToCart = wrap(async (req, res) => {
   const user = await User.findById(_id)
   const product = await Product.findById(productId)
   const existingProduct = user.userCart.find(
-    (item) => item.product.toString() == productId
+    (item) => item.product._id.toString() === productId
   )
 
   if (existingProduct) {
@@ -18,7 +17,16 @@ const addToCart = wrap(async (req, res) => {
       existingProduct.quantity = req.body.quantity
     }
   } else {
-    user.userCart.push({ product })
+    user.userCart.push({
+      product: {
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        description: product.description,
+        image: product.image,
+        quantity: product.quantity,
+      },
+    })
   }
 
   await user.save()
@@ -36,8 +44,9 @@ const deleteCartProducts = wrap(async (req, res) => {
   const { _id } = req.user.obj
   const user = await User.findById(_id)
   const deletedProducts = user.userCart.filter((item) => {
-    return item.product.toString() !== productId
+    return item._id.toString() !== productId
   })
+  console.log(deletedProducts);
   user.userCart = deletedProducts
   await user.save()
   res.json(user.userCart)

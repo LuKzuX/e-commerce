@@ -23,15 +23,15 @@ const userSchema = new mongoose.Schema({
     minlength: [6, "minimum password length is 6 characters"],
   },
   userCart: [{
-    product: {type: mongoose.Schema.Types.ObjectId, ref: 'Product'}, 
+    product: {type: Object, ref: 'Product'}, 
     quantity: {type: Number, default: 1}
   }],
   isAdmin: { type: Boolean, required: true },
 })
 
-userSchema.pre('save', async  function (next) {
+userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt()
-  this.password = await bcrypt.hash(this.password, salt)
+  this.password = bcrypt.hash(this.password, salt)
   next()
 })
 

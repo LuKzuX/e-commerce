@@ -1,61 +1,109 @@
 import { useEffect, useState, useContext } from "react"
-import { FiPlus, FiMinus } from "react-icons/fi"
-import { useAuthContext } from "../functions/useAuthContext"
-import useList from "../functions/fetchHook"
 import { useCartProducts } from "../functions/useCart"
+import { useAuthContext } from "../functions/useAuthContext"
+import { Link } from "react-router-dom"
+import axios from "axios"
 const CartList = () => {
-
-  const { totalValue } = useList("/api/")
-  const [newCartList, setCartList] = useState([])
+  const { user } = useAuthContext()
   const { cartItems, setCartItems, getCartItems } = useCartProducts()
   const [totalPrice, setTotalPrice] = useState(0)
 
-  
+  const handleAdd = async (id, quantity) => {
+    try {
+      const res = await axios.post(
+        "/api/" + id,
+        { quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${user.data.token}`,
+          },
+        }
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`/api/cart/` + id, {
+        headers: {
+          Authorization: `Bearer ${user.data.token}`,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
-    setCartList(totalValue)
+    calculateTotalPrice()
   }, [cartItems])
+
+  const calculateTotalPrice = () => {
+    if (cartItems) {
+      let total = 0
+      cartItems.forEach((item) => {
+        total += item.product.price * item.quantity
+      })
+      setTotalPrice(total)
+    }
+  }
 
   return (
     <div className='container mx-auto px-4 py-8'>
-      {newCartList &&
-        newCartList.map((x) => (
+      <h2 className='text-2xl font-semibold mb-6'>Your Cart</h2>
+      {cartItems &&
+        cartItems.map((x) => (
           <div
             className='flex items-center justify-between border border-gray-300 rounded-lg p-4 mb-4'
-            key={x._id}
+            key={x.product._id}
           >
-            <div className='flex items-center'>
-              <img
-                src={x.image}
-                alt={x.name}
-                className='w-16 h-16 rounded-md object-cover mr-4'
-              />
-              <div>
-                <p className='text-lg font-semibold'>{x.name}</p>
-                <p className='text-gray-600'>${x.price * x.quantity}</p>
+            <Link to={`/product-details/${x.product._id}`}>
+              <div className='flex items-center'>
+                <img
+                  src={x.product.image}
+                  alt={x.product.image}
+                  className='w-16 h-16 rounded-md object-cover mr-4'
+                />
+                <div>
+                  <p className='text-lg font-semibold'>{x.product.name}</p>
+                  <p className='text-gray-600'>
+                    ${x.product.price * x.quantity}
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
             <div className='flex items-center space-x-2'>
-              <p
-                className='cursor-pointer hover:text-blue-500'
-                onClick={() => {
-                  console.log(x._id)
-                }}
-              >
-                <FiPlus />
-              </p>
-              <input
+              <select
                 className='w-16 h-8 bg-gray-100 text-center text-gray-800 font-semibold rounded-lg'
                 type='text'
-                readOnly={true}
-                value={x.quantity}
-              />
-              <p className='cursor-pointer hover:text-red-500'>
-                <FiMinus />
-              </p>
+                onChange={(e) => {
+                  handleAdd(x.product._id, e.target.value)
+                }}
+              >
+                <option value={x.quantity}>{x.quantity}</option>
+                <option value={1}>{1}</option>
+                <option value={2}>{2}</option>
+                <option value={3}>{3}</option>
+                <option value={4}>{4}</option>
+                <option value={5}>{5}</option>
+              </select>
+              <button
+                className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300'
+                onClick={() => {
+                  handleDelete(x._id)
+                }}
+              >
+                Remove
+              </button>
             </div>
           </div>
         ))}
-      <p>total: {totalPrice}</p>
+      <p className='text-xl font-semibold mt-6'>Total Price: ${totalPrice}</p>
+      <button className='mt-8 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300'>
+        Proceed to Checkout
+      </button>
     </div>
   )
 }

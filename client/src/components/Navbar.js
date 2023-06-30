@@ -8,22 +8,29 @@ function Navbar({ open, setMenuOpen }) {
   const { logout } = useLogout()
   const { user } = useAuthContext()
   const handleLogout = () => {
-    logout()  
+    logout()
   }
 
   return (
-    <header className=' fixed w-full top-0 z-10'>
-      <nav className='bg-white shadow-md p-3 font-mono '>
+    <header className='fixed w-full top-0 z-10'>
+      <nav className='bg-white shadow-md p-3 font-mono'>
         <div className='flex justify-between items-center'>
-          <div className=''>
+          <div>
             <Link to={`/`}>
-              <h1 className='text-2xl'>E-Commerce</h1>
-              {user && <span>{user.data.user.email}</span>}
+              <h1 className='text-2xl font-bold'>E-Commerce</h1>
             </Link>
           </div>
-          <div className='hidden w-1/4 ml-auto lg:block'>
-            <Link className='font-bold'>Account</Link>
-            <Link to={`/cart`} className='ml-20 font-bold'>
+          <div className='hidden lg:block'>
+            <Link
+              to={`/account`}
+              className='ml-6 font-semibold text-gray-800 hover:text-gray-600 transition-colors duration-300'
+            >
+              Account
+            </Link>
+            <Link
+              to={`/cart`}
+              className='ml-6 font-semibold text-gray-800 hover:text-gray-600 transition-colors duration-300'
+            >
               Cart
             </Link>
           </div>
@@ -33,34 +40,37 @@ function Navbar({ open, setMenuOpen }) {
                 setMenuOpen(!open)
               }}
             >
-              <HiMenuAlt1 size={40} />
+              <HiMenuAlt1 size={40} className='cursor-pointer' />
             </h1>
           </div>
         </div>
       </nav>
       <div
-        className={`w-1/2 lg:w-1/4 xl:w-1/6 bg-white ml-auto flex flex-col items-center fixed top-0 right-0 text-lg py-10 border-b-2 border-l-2 transition-all duration-500 transform
-        ${
+        className={`w-1/2 lg:w-1/4 xl:w-1/6 bg-white ml-auto flex flex-col items-center fixed top-0 right-0 text-lg py-10 border-b-2 border-l-2 transition-all duration-500 transform ${
           open
             ? "translate-x-0 opacity-100 z-10"
             : "translate-x-full opacity-0 pointer-events-none z-10"
         }`}
       >
         <p
-          className='absolute top-2 right-3'
+          className='absolute top-2 right-3 cursor-pointer'
           onClick={() => {
             setMenuOpen(!open)
           }}
         >
           X
         </p>
-        <Link className='mb-3.5 lg:hidden' href='#'>
-          {" "}
-          <AiOutlineUser />{" "}
+        <Link
+          to={`/account`}
+          className='mb-3.5 lg:hidden text-gray-800 hover:text-gray-600 transition-colors duration-300'
+        >
+          <AiOutlineUser size={24} />
         </Link>
-        <Link className='mt-3.5 mb-3.5 lg:hidden'>
-          {" "}
-          <AiOutlineShoppingCart />{" "}
+        <Link
+          to={`/cart`}
+          className='mt-3.5 mb-3.5 lg:hidden text-gray-800 hover:text-gray-600 transition-colors duration-300'
+        >
+          <AiOutlineShoppingCart size={24} />
         </Link>
         {!user && (
           <div>
@@ -69,7 +79,7 @@ function Navbar({ open, setMenuOpen }) {
               onClick={() => {
                 setMenuOpen(!open)
               }}
-              className='mt-3.5 mb-3.5 p-3 px-5 bg-sky-500 rounded text-white'
+              className='mt-3.5 mb-3.5 p-3 px-5 bg-sky-500 rounded text-white hover:bg-sky-600 transition-colors duration-300'
             >
               Login
             </Link>
@@ -78,7 +88,7 @@ function Navbar({ open, setMenuOpen }) {
               onClick={() => {
                 setMenuOpen(!open)
               }}
-              className='mt-3.5 bg-green-500 p-3 rounded text-white'
+              className='mt-3.5 bg-green-500 p-3 rounded text-white hover:bg-green-600 transition-colors duration-300'
             >
               Sign up
             </Link>
@@ -86,13 +96,12 @@ function Navbar({ open, setMenuOpen }) {
         )}
         {user && (
           <div>
-            <Link
+            <button
               onClick={handleLogout}
-
-              className='inline-block px-4 py-2 text-white bg-red-500 border border-transparent rounded-md hover:bg-red-600 transition duration-200'
+              className='inline-block px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 transition-colors duration-300'
             >
               Logout
-            </Link>
+            </button>
           </div>
         )}
       </div>
