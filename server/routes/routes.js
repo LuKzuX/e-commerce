@@ -11,8 +11,12 @@ const {
   updateProduct,
   deleteProduct,
 } = require(`../controllers/productControllers`)
-const { signup, signin } = require(`../controllers/userControllers`)
-const { getCartProducts, addToCart, deleteCartProducts} = require(`../controllers/cartControllers`)
+const { signup, signin, getUser, updateUser } = require(`../controllers/userControllers`)
+const {
+  getCartProducts,
+  addToCart,
+  deleteCartProducts,
+} = require(`../controllers/cartControllers`)
 const multer = require("multer")
 
 const storage = multer.diskStorage({
@@ -46,6 +50,8 @@ router.delete(`/:id`, authMiddleware, verifyAdmin, deleteProduct)
 //user routes
 router.post(`/signup`, signup)
 router.post(`/signin`, signin)
+router.get(`/account`, authMiddleware, getUser)
+router.patch(`/account`, authMiddleware, updateUser)
 
 //cart routes
 router.get(`/cart`, authMiddleware, getCartProducts)

@@ -9,6 +9,7 @@ function Navbar({ open, setMenuOpen }) {
   const { user } = useAuthContext()
   const handleLogout = () => {
     logout()
+    window.location.reload()
   }
 
   return (

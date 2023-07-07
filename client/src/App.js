@@ -17,6 +17,7 @@ import Signup from "./pages/Signup"
 import { useAuthContext } from "./functions/useAuthContext"
 import Cart from "./pages/Cart"
 import { CartProvider } from "./context/cartContext"
+import Account from "./pages/Account"
 
 function App() {
   const [value, setValue] = useState(undefined)
@@ -53,6 +54,7 @@ function App() {
               <Route path='/cart' element={<Cart />} />
               <Route path='/signin' element={<Login />} />
               <Route path='/signup' element={<Signup />} />
+              <Route path='/account' element={<Account />} />
             </Routes>
           </div>
           </CartProvider>

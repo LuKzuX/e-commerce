@@ -1,7 +1,6 @@
 const User = require(`../models/userSchema`)
 const jwt = require("jsonwebtoken")
 const { wrap } = require("../utils/wrap")
-const bcrypt = require("bcrypt")
 const CustomError = require("../errors/customError")
 
 const createToken = (obj) => {
@@ -27,8 +26,24 @@ const signin = wrap(async (req, res) => {
   res.json({ user, token })
 })
 
+const getUser = wrap(async(req, res) => {
+    const {_id} = req.user.obj
+    const user = await User.findById(_id)
+    res.json(user)
+})
+
+const updateUser = wrap(async(req, res) => {
+  const {name, email, password} = req.body
+  const {_id} = req.user.obj
+  console.log(_id);
+  const user = await User.findByIdAndUpdate({_id: _id}, {name, email, password}, {runValidators: true})
+  res.json(user)
+})
+
 
 module.exports = {
   signup,
   signin,
+  getUser,
+  updateUser
 }

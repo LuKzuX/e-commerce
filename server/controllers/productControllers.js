@@ -44,7 +44,6 @@ const createProduct = wrap(async (req, res) => {
 })
 
 const updateProduct = wrap(async (req, res) => {
-  console.log(req.user);
   const { id } = req.params
   const { name, price, description, image = req.file.path, quantity } = req.body
   const updatedProduct = await Product.findByIdAndUpdate(
