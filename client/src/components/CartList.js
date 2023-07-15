@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState } from "react"
 import { useCartProducts } from "../functions/useCart"
 import { useAuthContext } from "../functions/useAuthContext"
 import { Link } from "react-router-dom"
@@ -10,7 +10,7 @@ const CartList = () => {
 
   const handleAdd = async (id, quantity) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         "/api/" + id,
         { quantity },
         {
@@ -19,6 +19,10 @@ const CartList = () => {
           },
         }
       )
+      const mapped = cartItems.map((item) => {
+        return {...item, quantity}
+      })
+      setCartItems(mapped)
     } catch (error) {
       console.log(error)
     }
@@ -30,15 +34,18 @@ const CartList = () => {
         headers: {
           Authorization: `Bearer ${user.data.token}`,
         },
-      })
+      });
+      const updatedCartItems = cartItems.filter((item) => item._id !== id);
+      setCartItems(updatedCartItems);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
+  
 
   useEffect(() => {
     calculateTotalPrice()
-  }, [cartItems])
+  }, [cartItems, setCartItems])
 
   const calculateTotalPrice = () => {
     if (cartItems) {

@@ -11,7 +11,7 @@ const {
   updateProduct,
   deleteProduct,
 } = require(`../controllers/productControllers`)
-const { signup, signin, getUser, updateUser } = require(`../controllers/userControllers`)
+const { signup, signin, getUser, updateUser, deleteUser } = require(`../controllers/userControllers`)
 const {
   getCartProducts,
   addToCart,
@@ -52,6 +52,7 @@ router.post(`/signup`, signup)
 router.post(`/signin`, signin)
 router.get(`/account`, authMiddleware, getUser)
 router.patch(`/account`, authMiddleware, updateUser)
+router.delete(`/account`, authMiddleware, deleteUser)
 
 //cart routes
 router.get(`/cart`, authMiddleware, getCartProducts)

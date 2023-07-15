@@ -45,6 +45,17 @@ const Account = () => {
     }
   }
 
+  const handleDelete = async() => {
+    try {
+      const res = await axios.delete(`/api/account`, {headers: {
+        Authorization: `Bearer ${user.data.token}`
+      }})
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="mt-20">
       <input
@@ -97,6 +108,7 @@ const Account = () => {
         Save
       </button>
       {msg && <p className="text-green-500">User updated!</p>}
+      <button onClick={handleDelete}>delete</button>
     </div>
   );
   
