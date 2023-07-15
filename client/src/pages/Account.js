@@ -70,7 +70,7 @@ const Account = () => {
         }`}
       />
       <input
-        type="text"
+        type="password"
         value={password}
         readOnly={!edit}
         onChange={(e) => {
