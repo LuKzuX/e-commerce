@@ -10,3 +10,4 @@ App created using all techologies i know, an e-commerce app, witch contains all 
 
 -Cart system, that contains the added items by the user, you can change the quantity of the items and delete them.
 
+![Screenshot (42)](https://github.com/LuKzuX/e-commerce/assets/80655939/344733a5-7420-4ea4-840a-435fd3c2021c)
