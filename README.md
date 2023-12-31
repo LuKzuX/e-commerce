@@ -1,6 +1,7 @@
 # e-commerce
 App created using all techologies i know, an e-commerce app, witch contains all main funcionalities such as:
--Product Page
+
+-Products Page where you can view all the products
 
 -CRUD Operations for the products to manage them.
 
